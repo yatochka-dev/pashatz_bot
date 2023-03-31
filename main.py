@@ -45,9 +45,9 @@ async def startup():
     await load_cogs()
 
     try:
+        bot.logger.debug("Starting bot...")
         discord_token = os.getenv("DISCORD_TOKEN")
-
-        # Print message with each logger level
+        bot.logger.debug("Discord token gotten")
 
         bot.logger.info(f"Starting bot in {os.getenv('STATE_NAME').title()} mode.")
 
