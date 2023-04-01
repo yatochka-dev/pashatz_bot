@@ -18,15 +18,10 @@ app.state.bot = bot
 
 
 def load_env():
-    environments = {
-        "dev": ".env.development",
-        "prod": ".env.production",
-    }
-
-    current_state = "dev" if bot.APP_SETTINGS.TESTING else "prod"
-
-    load_dotenv(dotenv_path=bot.BASE_DIR / environments[current_state])
-
+    if not bot.APP_SETTINGS.TESTING:
+        return
+    bot.logger.debug("Loading .env file...")
+    load_dotenv(dotenv_path=bot.BASE_DIR / '.env')
 
 async def load_cogs():
     cogs_folder = bot.BASE_DIR / "app" / "cogs"
@@ -41,15 +36,18 @@ async def load_cogs():
 
 @app.on_event("startup")
 async def startup():
+    bot.logger.debug("Loading env...")
     load_env()
+    bot.logger.debug("Loading cogs...")
     await load_cogs()
+
 
     try:
         bot.logger.debug("Starting bot...")
         discord_token = os.getenv("DISCORD_TOKEN")
         bot.logger.debug("Discord token gotten")
 
-        bot.logger.info(f"Starting bot in {os.getenv('STATE_NAME').title()} mode.")
+        bot.logger.info(f"Starting bot in {'Some'} mode.")
 
         if isinstance(discord_token, str) and len(discord_token) > 5:
             asyncio.create_task(bot.start(discord_token))

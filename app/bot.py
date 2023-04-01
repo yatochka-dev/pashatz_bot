@@ -1,4 +1,5 @@
 import datetime
+import os
 from pathlib import Path
 
 import disnake.mixins
@@ -14,7 +15,7 @@ from .types import SupportsIntCast
 
 
 class AppSettings(BaseSettings):
-    TESTING: bool = True
+    TESTING: bool = True if isinstance(os.environ.get("TESTING"), str) else False
     TIMEZONE = datetime.timezone(offset=datetime.timedelta(hours=3), name="UTC")
 
     github_link = "https://github.com/yatochka-dev/discord-bot-boilerplate"
